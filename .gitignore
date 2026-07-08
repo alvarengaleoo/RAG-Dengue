@@ -1,0 +1,16 @@
+# Ambiente virtual
+.venv/
+
+# Cache do Python
+__pycache__/
+*.pyc
+
+# Variáveis de ambiente
+.env
+
+# Banco vetorial
+db/
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
