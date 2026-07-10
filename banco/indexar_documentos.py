@@ -1,18 +1,26 @@
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from config import DOCUMENTOS_PATH, CHUNK_SIZE, CHUNK_OVERLAP
+from dotenv import load_dotenv
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_qdrant import QdrantVectorStore
+import os
+from config import DOCUMENTOS_PATH, CHUNK_SIZE, CHUNK_OVERLAP, EMBEDDING_MODEL, COLLECTION_NAME
 
 
-class CarregadorDocumento:
+load_dotenv()
+
+
+class IndexadorDocumentos:
     def __init__(self):
         self.loader = PyPDFLoader(
-            str(DOCUMENTOS_PATH / "DENGUE.pdf")
-        )
+            str(DOCUMENTOS_PATH / "DENGUE.pdf"))
 
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=CHUNK_SIZE,
-            chunk_overlap=CHUNK_OVERLAP,
-        )
+            chunk_overlap=CHUNK_OVERLAP,)
+        
+        self.embedding_model = HuggingFaceEmbeddings(
+            model_name=EMBEDDING_MODEL)
 
     def carregar_documentos(self):
         documentos = self.loader.load()
@@ -24,20 +32,24 @@ class CarregadorDocumento:
         print(f"Total de chunks criados: {len(chunks)}")
         return chunks
     
+    def indexar_documentos(self, chunks):
+        QdrantVectorStore.from_documents(
+            documents=chunks,
+            embedding=self.embedding_model,
+            url=os.getenv("QDRANT_URL"),
+            api_key=os.getenv("QDRANT_API_KEY"),
+            collection_name=COLLECTION_NAME)
+
+        print("Documentos indexados com sucesso!")
+
 
 if __name__ == "__main__":
 
-    carregador = CarregadorDocumento()
+    carregador = IndexadorDocumentos()
 
     documentos = carregador.carregar_documentos()
 
     chunks = carregador.criar_chunks(documentos)
 
-    print()
-
-    print(chunks[0].page_content)
-
-    print()
-
-    print(chunks[0].metadata)
+    carregador.indexar_documentos(chunks)
         
