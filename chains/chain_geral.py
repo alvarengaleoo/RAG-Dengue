@@ -1,46 +1,39 @@
 from dotenv import load_dotenv
-
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
-# Carrega as variáveis do .env
 load_dotenv()
 
-# Instancia a LLM
+# Modelo da Groq
 llm = ChatGroq(
     model="llama-3.3-70b-versatile",
     temperature=0.3
 )
 
-# Prompt da Chain
+# Prompt da aplicação
 prompt = ChatPromptTemplate.from_template(
     """
 Você é um assistente especializado em dengue.
 
-Sua função é responder apenas assuntos relacionados à dengue.
+Se o usuário fizer uma saudação, responda de forma educada e informe que pode ajudar com dúvidas sobre dengue.
 
-Regras:
+Se a pergunta não estiver relacionada à dengue, informe educadamente que você responde apenas perguntas sobre esse assunto.
 
-- Se o usuário apenas cumprimentar, responda de forma educada e amigável.
-- Explique que você pode responder dúvidas sobre sintomas, transmissão, prevenção e tratamento da dengue.
-- Se o usuário perguntar sobre assuntos que não tenham relação com dengue, informe educadamente que você é especializado apenas nesse tema.
-- Nunca invente informações.
-
-Pergunta do usuário:
-
+Pergunta:
 {pergunta}
 """
 )
 
-# Criação da Chain
+# Chain de assuntos gerais
 chain_geral = (
     prompt
     | llm
     | StrOutputParser()
 )
 
-# Teste
+
+# Teste da aplicação
 if __name__ == "__main__":
 
     pergunta = input("Digite uma mensagem: ")
@@ -51,5 +44,5 @@ if __name__ == "__main__":
         }
     )
 
-    print("\n===== RESPOSTA =====\n")
+    print("\nResposta:\n")
     print(resposta)

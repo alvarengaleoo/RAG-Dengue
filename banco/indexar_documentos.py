@@ -15,7 +15,6 @@ from config import (
     COLLECTION_NAME,
 )
 
-# Carrega as variáveis do .env
 load_dotenv()
 
 

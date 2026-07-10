@@ -1,11 +1,11 @@
-from langchain_groq import ChatGroq
-
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import PydanticOutputParser
+from dotenv import load_dotenv
 
 from pydantic import BaseModel, Field
 
-from dotenv import load_dotenv
+from langchain_groq import ChatGroq
+
+from langchain_core.output_parsers import PydanticOutputParser
+from langchain_core.prompts import ChatPromptTemplate
 
 load_dotenv()
 
@@ -23,15 +23,18 @@ class ClassificaEntrada(BaseModel):
     )
 
 
+# Parser da resposta
 parser = PydanticOutputParser(
     pydantic_object=ClassificaEntrada
 )
 
+# Modelo da Groq
 llm = ChatGroq(
     model="llama-3.3-70b-versatile",
     temperature=0
 )
 
+# Prompt de classificação
 prompt = ChatPromptTemplate.from_messages(
     [
         (
@@ -43,7 +46,7 @@ Escolha apenas uma opção.
 
 1 - Perguntas sobre dengue.
 
-2 - Saudações ou assuntos gerais.
+2 - Saudações ou conversa geral.
 
 3 - Cadastro de ocorrência de dengue.
 
@@ -57,6 +60,7 @@ Escolha apenas uma opção.
     ]
 )
 
+# Chain de classificação
 chain_classificador = (
     prompt.partial(
         format_instructions=parser.get_format_instructions()
@@ -65,6 +69,8 @@ chain_classificador = (
     | parser
 )
 
+
+# Teste da aplicação
 if __name__ == "__main__":
 
     pergunta = input("Digite uma pergunta: ")
@@ -75,7 +81,7 @@ if __name__ == "__main__":
         }
     )
 
-    print()
+    print("\nResposta:")
     print(resposta)
-    print()
-    print("Opção:", resposta.opcao)
+
+    print(f"\nOpção escolhida: {resposta.opcao}")

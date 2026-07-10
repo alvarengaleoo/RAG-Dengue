@@ -48,7 +48,9 @@ RAG_Dengue/
 ├── config.py
 ├── main.py
 ├── requirements.txt
-└── .env
+├── README.md
+├── .gitignore
+└── .env.example
 ```
 
 ## Instalação
@@ -73,7 +75,7 @@ pip install -r requirements.txt
 
 ## Configuração
 
-Criar um arquivo `.env` contendo:
+Criar um arquivo `.env` na raiz do projeto contendo:
 
 ```text
 GROQ_API_KEY=sua_chave
@@ -100,7 +102,7 @@ python main.py
 ## Funcionalidades
 
 * Carregamento de documentos PDF
-* Divisão de documentos em chunks
+* Divisão dos documentos em chunks
 * Geração de embeddings
 * Armazenamento no Qdrant Cloud
 * Busca semântica

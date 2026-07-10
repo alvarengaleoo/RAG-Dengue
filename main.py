@@ -1,26 +1,19 @@
 from operator import itemgetter
-
 from langchain_core.runnables import RunnableLambda, RunnableParallel
-
 from chains.chain_classifica import chain_classificador
 from chains.chain_geral import chain_geral
 from chains.chain_rag import responder
 
 
+# Escolhe qual chain será executada
 def escolher_chain(entrada):
-    """
-    Decide qual chain será executada de acordo com a classificação.
-    """
 
     opcao = entrada["classificacao"].opcao
 
     if opcao == 1:
-        print("\n>> Rota escolhida: RAG\n")
         return responder(entrada["pergunta"])
 
     elif opcao == 2:
-        print("\n>> Rota escolhida: Assuntos Gerais\n")
-
         return chain_geral.invoke(
             {
                 "pergunta": entrada["pergunta"]
@@ -28,13 +21,12 @@ def escolher_chain(entrada):
         )
 
     elif opcao == 3:
-        return (
-            "O fluxo de cadastro será implementado na próxima versão do projeto."
-        )
+        return "O cadastro de ocorrência será implementado em uma próxima versão."
 
-    return "Não foi possível identificar a solicitação."
+    return "Não foi possível processar a solicitação."
 
 
+# Router principal
 router = (
     RunnableParallel(
         {
@@ -48,9 +40,9 @@ router = (
 
 def main():
 
-    print("=" * 60)
-    print(" Chatbot RAG - Dengue")
-    print("=" * 60)
+    print("=" * 50)
+    print("Chatbot RAG - Dengue")
+    print("=" * 50)
     print("Digite 'sair' para encerrar.\n")
 
     while True:
@@ -58,7 +50,7 @@ def main():
         pergunta = input("Você: ")
 
         if pergunta.lower() == "sair":
-            print("\nEncerrando o chatbot...")
+            print("\nAté a próxima!")
             break
 
         resposta = router.invoke(
@@ -70,5 +62,6 @@ def main():
         print(f"\nAssistente: {resposta}\n")
 
 
+# Inicia a aplicação
 if __name__ == "__main__":
     main()

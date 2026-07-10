@@ -14,10 +14,9 @@ from config import (
     TOP_K,
 )
 
-# Carrega as variáveis do .env
 load_dotenv()
 
-# Modelo de Embeddings (o mesmo usado na indexação)
+# Modelo de Embeddings 
 modelo_embedding = HuggingFaceEmbeddings(
     model_name=EMBEDDING_MODEL
 )
@@ -77,15 +76,7 @@ def responder(pergunta):
     # Busca os documentos no Qdrant
     documentos = retriever.invoke(pergunta)
 
-    # Apenas para estudo (pode remover depois)
-    print("\n===== CHUNKS RECUPERADOS =====\n")
-
-    for i, doc in enumerate(documentos, start=1):
-        print(f"Chunk {i}")
-        print("-" * 50)
-        print(doc.page_content)
-        print()
-
+    
     # Concatena os chunks em um único contexto
     contexto = criar_contexto(documentos)
 

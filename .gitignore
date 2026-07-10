@@ -8,9 +8,9 @@ __pycache__/
 # Variáveis de ambiente
 .env
 
-# Banco vetorial
+# Banco vetorial local
 db/
 
 # VS Code
-.vscode/*
+.vscode/
 !.vscode/settings.json
